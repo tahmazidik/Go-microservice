@@ -1,0 +1,9 @@
+package database
+
+type Config struct {
+	User     string
+	Password string
+	Host     string
+	Port     int
+	Dbname   string
+}
