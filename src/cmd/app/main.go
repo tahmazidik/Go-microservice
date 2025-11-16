@@ -1,18 +1,23 @@
 package main
 
 import (
-	"fmt"
+	"github.com/tahmazidik/Go-microservice/internal/app"
 	"github.com/tahmazidik/Go-microservice/internal/config"
+	"github.com/tahmazidik/Go-microservice/server"
 )
 
-func mian() {
+func main() {
+	// Загрузка окружения
 	config.LoadEnviroment()
 
-	appConfig := config.NewConfig()
+	// Создаем DI контейнер
+	container := app.BuildContainer()
 
-	fmt.Println(fmt.Sprintf("User: %s", appConfig.Database.User))
-	fmt.Println(fmt.Sprintf("Host: %s", appConfig.Database.Host))
-	fmt.Println(fmt.Sprintf("Password: %s", appConfig.Database.Password))
-	fmt.Println(fmt.Sprintf("DbName: %s", appConfig.Database.Dbname))
-	fmt.Println(fmt.Sprintf("Port: %d", appConfig.Database.Port))
+	// Инвоким сервер
+	err := container.Invoke(func(server *server.Server) {
+		server.Run()
+	})
+	if err != nil {
+		panic(err)
+	}
 }
